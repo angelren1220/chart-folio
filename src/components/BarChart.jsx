@@ -4,20 +4,29 @@ import fetchData from '../hooks/fetchData';
 
 const BarChart = () => {
 
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
   const [values, setValues] = useState([]);
   const [dates, setDates] = useState([]);
 
   const dataLink = "https://raw.githubusercontent.com/FreeCodeCamp/ProjectReferenceData/master/GDP-data.json";
 
-  const w = 800;
-  const h = 400;
+  const w = 1200;
+  const h = 600;
+  const margin = { top: 10, right: 30, bottom: 60, left: 60 };
+  const width = w - margin.left - margin.right;
+  const height = h - margin.top - margin.bottom;
+
 
   const svgRef = useRef(null);
 
+  // fetch and parse data
   useEffect(() => {
     fetchData(dataLink)
       .then(data => {
 
+        const title = data.source_name + ": " + data.name;
+        const description = data.description + " last updated at: " + data.updated_at;
         const parsedDates = [];
         const parsedValues = [];
 
@@ -28,6 +37,8 @@ const BarChart = () => {
           parsedValues.push(item[1]);
         });
 
+        setTitle(title);
+        setDescription(description);
         setDates(parsedDates);
         setValues(parsedValues);
       })
@@ -35,27 +46,75 @@ const BarChart = () => {
 
   }, []);
 
+  // create bar chart
   useEffect(() => {
-    const svg = d3.select(svgRef.current);
+    if (values.length > 0) {
 
-    // Clear previous SVG content
-    svg.selectAll('*').remove();
+      const svg = d3.select(svgRef.current)
+              .append("g")
+              .attr("transform", `translate(${margin.left}, ${margin.top})`);
 
-    svg.selectAll("rect")
-      .data(values)
-      .enter()
-      .append("rect")
-      .attr("x", (d, i) => i * 3)
-      .attr("y", (d) => h - 0.02 * d)
-      .attr("width", 2)
-      .attr("height", (d) => 0.02 * d)
-      .attr("fill", "navy")
-      .attr("class", "bar")
+      // create scales
+      const xScale = d3.scaleTime()
+        .domain([d3.min(dates), d3.max(dates)])
+        .range([0, width]);
+
+      console.log(d3.max(values));
+
+      const yScale = d3.scaleLinear()
+        .domain([0, d3.max(values)])
+        .range([height, 0]);
+
+      // create axis
+      const xAxis = d3.axisBottom(xScale);
+      const yAxis = d3.axisLeft(yScale);
+
+      // Clear previous SVG content
+      svg.selectAll('*').remove();
+
+      // create bars
+      svg.selectAll("rect")
+        .data(values)
+        .enter()
+        .append("rect")
+        .attr("x", (d, i) => xScale(dates[i]))
+        .attr("y", (d) => yScale(d))
+        .attr("width", (d, i) => { // dynamically set the width based on the data's date intervals
+          if(i < dates.length - 1){
+            return xScale(dates[i + 1]) - xScale(dates[i]) - 1;
+          } else {
+            return 2;
+          }
+        })
+        .attr("height", (d) => height - yScale(d))
+        .attr("fill", "navy")
+        .attr("class", "bar");
+
+
+      // add x-axis
+      svg.append("g")
+        .attr("transform", `translate(0, ${height})`)
+        .call(xAxis)
+        .selectAll("text")
+        .style("text-anchor", "end")
+        .attr("dx", "-.8em")
+        .attr("dy", ".15em")
+        .attr("transform", "rotate(-65)");
+
+      // add y-axis
+      svg.append("g")
+        .call(yAxis);
+    }
+
   }, [values]);
 
 
   return (
-    <svg ref={svgRef} width={w} height={h}></svg>
+    <div className='chart-container'>
+      <h2 className='chart-title'>{title}</h2>
+      <svg ref={svgRef} width={w} height={h}></svg>
+      <p className='chart-description'>{description}</p>
+    </div>
   )
 }
 

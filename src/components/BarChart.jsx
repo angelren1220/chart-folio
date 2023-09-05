@@ -6,10 +6,9 @@ const BarChart = () => {
 
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
-  const [values, setValues] = useState([]);
-  const [dates, setDates] = useState([]);
+  const [data, setData] = useState([]);
 
-  const dataLink = "https://raw.githubusercontent.com/FreeCodeCamp/ProjectReferenceData/master/GDP-data.json";
+  const dataLink = "http://api.worldbank.org/v2/country/all/indicator/SP.POP.TOTL?format=json";
 
   const w = 1200;
   const h = 600;
@@ -25,22 +24,19 @@ const BarChart = () => {
     fetchData(dataLink)
       .then(data => {
 
-        const title = data.source_name + ": " + data.name;
-        const description = data.description + " last updated at: " + data.updated_at;
-        const parsedDates = [];
-        const parsedValues = [];
+        const parsedData =[];
 
-        const parseDate = d3.timeParse("%Y-%m-%d");
-
-        data.data.forEach(item => {
-          parsedDates.push(parseDate(item[0]));
-          parsedValues.push(item[1]);
+        data[1].forEach(item => {
+          parsedData.push([item.date, item.value]);
         });
+
+        // sort data by date
+        parsedData.sort((a, b) => a[0] - b[0]);
+        console.log(parsedData);
 
         setTitle(title);
         setDescription(description);
-        setDates(parsedDates);
-        setValues(parsedValues);
+        setData(parsedData);
       })
       .catch(error => console.error("Error fetching data:", error));
 
@@ -48,19 +44,21 @@ const BarChart = () => {
 
   // create bar chart
   useEffect(() => {
-    if (values.length > 0) {
+    if (data.length > 0) {
+
+      const barWidth = width / data.length - 2;
 
       const svg = d3.select(svgRef.current)
         .append("g")
         .attr("transform", `translate(${margin.left}, ${margin.top})`);
 
       // create scales
-      const xScale = d3.scaleTime()
-        .domain([d3.min(dates), d3.max(dates)])
+      const years = data.map(d => d[0]);
+      const xScale = d3.scaleLinear()
+        .domain([d3.min(years), d3.max(years)])
         .range([0, width]);
 
-      console.log(d3.max(values));
-
+      const values = data.map(d => d[1]);
       const yScale = d3.scaleLinear()
         .domain([0, d3.max(values)])
         .range([height, 0]);
@@ -74,43 +72,39 @@ const BarChart = () => {
 
       // create bars
       svg.selectAll("rect")
-        .data(values)
+        .data(data)
         .enter()
         .append("rect")
-        .attr("x", (d, i) => xScale(dates[i]))
-        .attr("y", (d) => yScale(d))
-        .attr("width", (d, i) => { // dynamically set the width based on the data's date intervals
-          if (i < dates.length - 1) {
-            return xScale(dates[i + 1]) - xScale(dates[i]) - 1;
-          } else {
-            return 2;
-          }
-        })
-        .attr("height", (d) => height - yScale(d))
+        .attr("x", d => xScale(d[0]))
+        .attr("y", d => yScale(d[1]))
+        .attr("width", barWidth)
+        .attr("height", d => height - yScale(d[1]))
         .attr("fill", "navy")
         .attr("class", "bar")
-        .on("mouseover", (event, d) => {
-          d3.select(event.currentTarget)
-            .attr("fill", "lightblue");
-        })
-        .on("mouseout", (event, d) => {
-          d3.select(".tooltip")
-            .style("left", (event.pageX + 5) + "px")
-            .style("top", (event.pageY - 28) + "px")
-            .style("display", "inline-block")
-            .html("Value: " + d);
+        // .on("mouseover", (event, d, i) => {
 
-          d3.select(event.currentTarget)
-            .attr("fill", "lightblue");
-
-        })
-        .on("mouseout", (event, d) => {
-          d3.select(".tooltip")
-            .style("display", "none");
+        //   // highlight the bar
+        //   d3.select(event.currentTarget)
+        //     .attr("fill", "lightblue");
           
-          d3.select(event.currentTarget)
-            .attr("fill", "navy");
-        })
+        //   // display the tooltip
+        //   d3.select(".tooltip")
+        //     .style("left", (event.pageX + 5) + "px")
+        //     .style("top", (event.pageY - 28) + "px")
+        //     .style("display", "inline-block")
+        //     .html(`Date: ${dates[i]} <br> Value: ${d}`);
+
+
+        // })
+        // .on("mouseout", (event) => {
+        //   // hide the tooltip
+        //   d3.select(".tooltip")
+        //     .style("display", "none");
+          
+        //   // revert bar's color
+        //   d3.select(event.currentTarget)
+        //     .attr("fill", "navy");
+        // })
 
 
       // add x-axis
@@ -128,7 +122,7 @@ const BarChart = () => {
         .call(yAxis);
     }
 
-  }, [values]);
+  }, [data]);
 
 
   return (

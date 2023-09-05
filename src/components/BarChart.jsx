@@ -24,7 +24,7 @@ const BarChart = () => {
     fetchData(dataLink)
       .then(data => {
 
-        const parsedData =[];
+        const parsedData = [];
 
         data[1].forEach(item => {
           parsedData.push([item.date, item.value]);
@@ -64,8 +64,16 @@ const BarChart = () => {
         .range([height, 0]);
 
       // create axis
-      const xAxis = d3.axisBottom(xScale);
-      const yAxis = d3.axisLeft(yScale);
+      const xAxis = d3.axisBottom(xScale)
+        .tickFormat(d3.format("d"));
+      const yAxis = d3.axisLeft(yScale)
+        .tickFormat(d => {
+          if (d >= 1e9) return `${d / 1e9}B`;
+          if (d >= 1e6) return `${d / 1e6}M`;
+          if (d >= 1e3) return `${d / 1e3}K`;
+          return d;
+        });
+
 
       // Clear previous SVG content
       svg.selectAll('*').remove();
@@ -81,30 +89,30 @@ const BarChart = () => {
         .attr("height", d => height - yScale(d[1]))
         .attr("fill", "navy")
         .attr("class", "bar")
-        // .on("mouseover", (event, d, i) => {
+      // .on("mouseover", (event, d, i) => {
 
-        //   // highlight the bar
-        //   d3.select(event.currentTarget)
-        //     .attr("fill", "lightblue");
-          
-        //   // display the tooltip
-        //   d3.select(".tooltip")
-        //     .style("left", (event.pageX + 5) + "px")
-        //     .style("top", (event.pageY - 28) + "px")
-        //     .style("display", "inline-block")
-        //     .html(`Date: ${dates[i]} <br> Value: ${d}`);
+      //   // highlight the bar
+      //   d3.select(event.currentTarget)
+      //     .attr("fill", "lightblue");
+
+      //   // display the tooltip
+      //   d3.select(".tooltip")
+      //     .style("left", (event.pageX + 5) + "px")
+      //     .style("top", (event.pageY - 28) + "px")
+      //     .style("display", "inline-block")
+      //     .html(`Date: ${dates[i]} <br> Value: ${d}`);
 
 
-        // })
-        // .on("mouseout", (event) => {
-        //   // hide the tooltip
-        //   d3.select(".tooltip")
-        //     .style("display", "none");
-          
-        //   // revert bar's color
-        //   d3.select(event.currentTarget)
-        //     .attr("fill", "navy");
-        // })
+      // })
+      // .on("mouseout", (event) => {
+      //   // hide the tooltip
+      //   d3.select(".tooltip")
+      //     .style("display", "none");
+
+      //   // revert bar's color
+      //   d3.select(event.currentTarget)
+      //     .attr("fill", "navy");
+      // })
 
 
       // add x-axis

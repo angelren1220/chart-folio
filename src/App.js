@@ -5,7 +5,7 @@ import MapChart from './components/MapChart';
 function App() {
   return (
     <div className="App">
-      <BarChart />
+      {/* <BarChart /> */}
       <MapChart />
     </div>
   );

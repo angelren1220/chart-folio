@@ -1,53 +1,65 @@
 import React, { useRef, useState, useEffect } from 'react';
 import * as d3 from 'd3';
+import * as topojson from 'topojson-client';
 import fetchData from '../hooks/fetchData';
 
 const MapChart = () => {
 
   const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
-  const [data, setData] = useState([]);
+  const [eduData, setEduData] = useState([]);
+  const [mapData, setMapData] = useState(null);
 
-  const dataLink = "https://api.worldbank.org/V2/incomeLevel/LIC/country?format=json";
-
-  const w = 1200;
-  const h = 600;
-  const margin = { top: 10, right: 30, bottom: 60, left: 60 };
-  const width = w - margin.left - margin.right;
-  const height = h - margin.top - margin.bottom;
-
-
-  const svgRef = useRef(null);
+  const dataLinks = [
+    "https://cdn.freecodecamp.org/testable-projects-fcc/data/choropleth_map/for_user_education.json",
+    "https://cdn.freecodecamp.org/testable-projects-fcc/data/choropleth_map/counties.json"
+  ];
 
   // fetch and parse data
   useEffect(() => {
-    fetchData(dataLink)
-      .then(data => {
-
-        const parsedData = [];
-
-        data[1].forEach(item => {
-          parsedData.push({
-            name: item.name,
-            incomeLevel: item.incomeLevel,
-            lng: item.longitude,
-            lat: item.latitude
-          });
-        });
-
-        console.log(parsedData);
-        setData(parsedData);
-      })
-      .catch(error => console.error("Error fetching data:", error));
-
+    Promise.all([
+      fetchData(dataLinks[0]),
+      fetchData(dataLinks[1])
+    ]).then(([edu, map]) => {
+      setEduData(edu);
+      setMapData(map);
+    }).catch(err => console.error("Error fetching data:", err));
   }, []);
+
+  useEffect(() => {
+    if (eduData && mapData) {
+      const width = 960;
+      const height = 600;
+
+      const svg = d3.select("svg")
+        .attr("width", width)
+        .attr("height", height);
+
+      const counties = topojson.feature(mapData, mapData.objects.counties).features;
+      const path = d3.geoPath();
+
+      const colorScale = d3.scaleThreshold()
+        .domain([10, 20, 30, 40, 50, 60, 70, 80, 90])
+        .range(d3.schemeBlues[9]);
+
+      svg.selectAll("path")
+        .data(counties)
+        .enter()
+        .append("path")
+        .attr("class", "county")
+        .attr("d", path)
+        .attr("fill", d => {
+          const county = eduData.find(c => c.fips === d.id);
+          return county ? colorScale(county.bachelorsOrHigher) : "#EEE";
+        });
+    }
+  }, [eduData, mapData]);
 
   return (
     <div className='chart-container'>
       <h2 className='chart-title'>Map Chart</h2>
       <svg ></svg>
     </div>
-  )
-}
+  );
+};
 
 export default MapChart;

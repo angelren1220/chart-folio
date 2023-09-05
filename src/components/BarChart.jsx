@@ -5,10 +5,9 @@ import fetchData from '../hooks/fetchData';
 const BarChart = () => {
 
   const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
   const [data, setData] = useState([]);
 
-  const dataLink = "http://api.worldbank.org/v2/country/all/indicator/SP.POP.TOTL?format=json";
+  const dataLinks = ["http://api.worldbank.org/v2/country/all/indicator/SP.POP.TOTL?format=json"];
 
   const w = 1200;
   const h = 600;
@@ -21,7 +20,7 @@ const BarChart = () => {
 
   // fetch and parse data
   useEffect(() => {
-    fetchData(dataLink)
+    fetchData(dataLinks)
       .then(data => {
 
         const parsedData = [];

@@ -33,10 +33,8 @@ const BarChart = () => {
 
         // sort data by date
         parsedData.sort((a, b) => a[0] - b[0]);
-        console.log(parsedData);
 
         setTitle(parsedTitle);
-        setDescription(description);
         setData(parsedData);
       })
       .catch(error => console.error("Error fetching data:", error));
@@ -160,7 +158,6 @@ const BarChart = () => {
         border: "1px solid #ccc"
       }}></div>
       <svg ref={svgRef} width={w} height={h}></svg>
-      <p className='chart-description'>{description}</p>
     </div>
   )
 }

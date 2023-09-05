@@ -51,8 +51,8 @@ const BarChart = () => {
     if (values.length > 0) {
 
       const svg = d3.select(svgRef.current)
-              .append("g")
-              .attr("transform", `translate(${margin.left}, ${margin.top})`);
+        .append("g")
+        .attr("transform", `translate(${margin.left}, ${margin.top})`);
 
       // create scales
       const xScale = d3.scaleTime()
@@ -80,7 +80,7 @@ const BarChart = () => {
         .attr("x", (d, i) => xScale(dates[i]))
         .attr("y", (d) => yScale(d))
         .attr("width", (d, i) => { // dynamically set the width based on the data's date intervals
-          if(i < dates.length - 1){
+          if (i < dates.length - 1) {
             return xScale(dates[i + 1]) - xScale(dates[i]) - 1;
           } else {
             return 2;
@@ -88,7 +88,29 @@ const BarChart = () => {
         })
         .attr("height", (d) => height - yScale(d))
         .attr("fill", "navy")
-        .attr("class", "bar");
+        .attr("class", "bar")
+        .on("mouseover", (event, d) => {
+          d3.select(event.currentTarget)
+            .attr("fill", "lightblue");
+        })
+        .on("mouseout", (event, d) => {
+          d3.select(".tooltip")
+            .style("left", (event.pageX + 5) + "px")
+            .style("top", (event.pageY - 28) + "px")
+            .style("display", "inline-block")
+            .html("Value: " + d);
+
+          d3.select(event.currentTarget)
+            .attr("fill", "lightblue");
+
+        })
+        .on("mouseout", (event, d) => {
+          d3.select(".tooltip")
+            .style("display", "none");
+          
+          d3.select(event.currentTarget)
+            .attr("fill", "navy");
+        })
 
 
       // add x-axis
@@ -112,6 +134,13 @@ const BarChart = () => {
   return (
     <div className='chart-container'>
       <h2 className='chart-title'>{title}</h2>
+      <div className='tooltip' style={{
+        position: "absolute",
+        display: "none",
+        background: "#f9f9f9",
+        padding: "5px",
+        border: "1px solid #ccc"
+      }}></div>
       <svg ref={svgRef} width={w} height={h}></svg>
       <p className='chart-description'>{description}</p>
     </div>

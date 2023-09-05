@@ -89,30 +89,30 @@ const BarChart = () => {
         .attr("height", d => height - yScale(d[1]))
         .attr("fill", "navy")
         .attr("class", "bar")
-      // .on("mouseover", (event, d, i) => {
+        .on("mouseover", (event, d) => {
+          const [year, value] = d;
+          // highlight the bar
+          d3.select(event.currentTarget)
+            .attr("fill", "lightblue");
 
-      //   // highlight the bar
-      //   d3.select(event.currentTarget)
-      //     .attr("fill", "lightblue");
-
-      //   // display the tooltip
-      //   d3.select(".tooltip")
-      //     .style("left", (event.pageX + 5) + "px")
-      //     .style("top", (event.pageY - 28) + "px")
-      //     .style("display", "inline-block")
-      //     .html(`Date: ${dates[i]} <br> Value: ${d}`);
+          // display the tooltip
+          d3.select(".tooltip")
+            .style("left", (event.pageX + 5) + "px")
+            .style("top", (event.pageY - 28) + "px")
+            .style("display", "inline-block")
+            .html(`Date: ${year} <br> Value: ${value}`);
 
 
-      // })
-      // .on("mouseout", (event) => {
-      //   // hide the tooltip
-      //   d3.select(".tooltip")
-      //     .style("display", "none");
+        })
+        .on("mouseout", (event) => {
+          // hide the tooltip
+          d3.select(".tooltip")
+            .style("display", "none");
 
-      //   // revert bar's color
-      //   d3.select(event.currentTarget)
-      //     .attr("fill", "navy");
-      // })
+          // revert bar's color
+          d3.select(event.currentTarget)
+            .attr("fill", "navy");
+        })
 
 
       // add x-axis

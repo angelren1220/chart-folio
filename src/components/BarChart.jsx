@@ -25,6 +25,7 @@ const BarChart = () => {
       .then(data => {
 
         const parsedData = [];
+        const parsedTitle = data[1][0].indicator.value + " - " + data[1][0].country.value;
 
         data[1].forEach(item => {
           parsedData.push([item.date, item.value]);
@@ -34,7 +35,7 @@ const BarChart = () => {
         parsedData.sort((a, b) => a[0] - b[0]);
         console.log(parsedData);
 
-        setTitle(title);
+        setTitle(parsedTitle);
         setDescription(description);
         setData(parsedData);
       })
@@ -100,7 +101,7 @@ const BarChart = () => {
             .style("left", (event.pageX + 5) + "px")
             .style("top", (event.pageY - 28) + "px")
             .style("display", "inline-block")
-            .html(`Date: ${year} <br> Value: ${value}`);
+            .html(`Year: ${year} <br> Population: ${value}`);
 
 
         })
@@ -128,7 +129,22 @@ const BarChart = () => {
       // add y-axis
       svg.append("g")
         .call(yAxis);
+      
+      // labels for axes
+      svg.append("text")
+        .attr("transform", `translate(${width / 2}, ${height + margin.bottom - 10})`)
+        .style("text-anchor", "middle")
+        .text("Year");
+      svg.append("text")
+        .attr("transform", "rotate(-90)")
+        .attr("y", 0 - margin.left)
+        .attr("x", 0 - (height / 2))
+        .attr("dy", "1em")
+        .style("text-anchor", "middle")
+        .text("Population");
+
     }
+
 
   }, [data]);
 

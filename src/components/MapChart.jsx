@@ -73,6 +73,18 @@ const MapChart = () => {
         .attr("height", legendHeight)
         .attr("x", (d, i) => i * (legendWidth / colorScale.range().length))
         .attr("fill", d => d);
+
+      //add tick marks to the legend
+      legend.selectAll("text")
+        .data(colorScale.domain())
+        .enter()
+        .append("text")
+        .attr("x", (d, i) => 
+          i * (legendWidth / colorScale.range().length))
+        .attr("y", legendHeight + 10)
+        .text(d => `${Math.round(d)}%`)
+        .style("font-size", "10px")
+        .style("text-anchor", "start");
     }
   }, [eduData, mapData]);
 

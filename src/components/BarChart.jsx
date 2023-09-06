@@ -5,10 +5,9 @@ import '../styles/barchart.scss';
 
 const BarChart = () => {
 
-  const [title, setTitle] = useState("");
   const [data, setData] = useState([]);
 
-  const dataLinks = ["http://api.worldbank.org/v2/country/all/indicator/SP.POP.TOTL?format=json"];
+  const dataLink = "https://raw.githubusercontent.com/freeCodeCamp/ProjectReferenceData/master/GDP-data.json";
 
   const w = 1200;
   const h = 600;
@@ -21,20 +20,19 @@ const BarChart = () => {
 
   // fetch and parse data
   useEffect(() => {
-    fetchData(dataLinks)
+    fetchData(dataLink)
       .then(data => {
 
-        const parsedData = [];
-        const parsedTitle = data[1][0].indicator.value + " - " + data[1][0].country.value;
+        const parsedData = []
+        const parseDate = d3.timeParse("%Y-%m-%d");
 
-        data[1].forEach(item => {
-          parsedData.push([item.date, item.value]);
+        data.data.forEach(item => {
+          parsedData.push([parseDate(item[0]), item[1]]);
         });
 
         // sort data by date
         parsedData.sort((a, b) => a[0] - b[0]);
 
-        setTitle(parsedTitle);
         setData(parsedData);
       })
       .catch(error => console.error("Error fetching data:", error));
@@ -53,7 +51,7 @@ const BarChart = () => {
 
       // create scales
       const years = data.map(d => d[0]);
-      const xScale = d3.scaleLinear()
+      const xScale = d3.scaleTime()
         .domain([d3.min(years), d3.max(years)])
         .range([0, width]);
 
@@ -64,7 +62,8 @@ const BarChart = () => {
 
       // create axis
       const xAxis = d3.axisBottom(xScale)
-        .tickFormat(d3.format("d"));
+        .ticks(d3.timeYear.every(5))
+        .tickFormat(d3.timeFormat("%Y"));
       const yAxis = d3.axisLeft(yScale)
         .tickFormat(d => {
           if (d >= 1e9) return `${d / 1e9}B`;
@@ -89,7 +88,9 @@ const BarChart = () => {
         .attr("fill", "navy")
         .attr("class", "bar")
         .on("mouseover", (event, d) => {
-          const [year, value] = d;
+          const [date, value] = d;
+          const formatTime = d3.timeFormat("%Y Q%q");
+          const formattedDate = formatTime(date);
           // highlight the bar
           d3.select(event.currentTarget)
             .classed("bar-highlighted", true);
@@ -99,7 +100,7 @@ const BarChart = () => {
             .style("left", (event.pageX + 5) + "px")
             .style("top", (event.pageY - 28) + "px")
             .style("display", "inline-block")
-            .html(`Year: ${year} <br> Population: ${value}`);
+            .html(`Year: ${formattedDate} <br>  $${value.toFixed(1)} Billion`);
 
 
         })
@@ -139,7 +140,7 @@ const BarChart = () => {
         .attr("x", 0 - (height / 2))
         .attr("dy", "1em")
         .style("text-anchor", "middle")
-        .text("Population");
+        .text("Gross Domestic Product");
 
     }
 
@@ -149,7 +150,7 @@ const BarChart = () => {
 
   return (
     <div className='chart-container'>
-      <h2 className='chart-title'>{title}</h2>
+      <h2 className='chart-title'>United States GDP</h2>
       <div className='tooltip' style={{
         position: "absolute",
         display: "none",

@@ -7,8 +7,6 @@ const BarChart = () => {
 
   const [data, setData] = useState([]);
 
-  const dataLink = "https://raw.githubusercontent.com/freeCodeCamp/ProjectReferenceData/master/GDP-data.json";
-
   const w = 1200;
   const h = 600;
   const margin = { top: 10, right: 30, bottom: 60, left: 60 };
@@ -20,6 +18,8 @@ const BarChart = () => {
 
   // fetch and parse data
   useEffect(() => {
+    const dataLink = "https://raw.githubusercontent.com/freeCodeCamp/ProjectReferenceData/master/GDP-data.json";
+    
     fetchData(dataLink)
       .then(data => {
 
@@ -154,7 +154,7 @@ const BarChart = () => {
     }
 
 
-  }, [data]);
+  }, [data, height, margin.bottom, margin.left, margin.top, width]);
 
 
   return (

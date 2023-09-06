@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import * as d3 from 'd3';
 import * as topojson from 'topojson-client';
 import fetchData from '../hooks/fetchData';
@@ -9,13 +9,24 @@ const MapChart = () => {
   const [eduData, setEduData] = useState([]);
   const [mapData, setMapData] = useState(null);
 
-  const dataLinks = [
-    "https://cdn.freecodecamp.org/testable-projects-fcc/data/choropleth_map/for_user_education.json",
-    "https://cdn.freecodecamp.org/testable-projects-fcc/data/choropleth_map/counties.json"
-  ];
+  // Universal dimensions
+  const w = 1200; // Total width
+  const h = 600;  // Total height
+  const margin = { top: 10, right: 30, bottom: 60, left: 60 };
+
+  // Calculated width and height
+  const width = w - margin.left - margin.right;
+  const height = h - margin.top - margin.bottom;
+
+  const svgRef = useRef(null);
+
 
   // fetch and parse data
   useEffect(() => {
+    const dataLinks = [
+      "https://cdn.freecodecamp.org/testable-projects-fcc/data/choropleth_map/for_user_education.json",
+      "https://cdn.freecodecamp.org/testable-projects-fcc/data/choropleth_map/counties.json"
+    ];
     Promise.all([
       fetchData(dataLinks[0]),
       fetchData(dataLinks[1])
@@ -27,12 +38,12 @@ const MapChart = () => {
 
   useEffect(() => {
     if (eduData && mapData) {
-      const width = 960;
-      const height = 600;
 
-      const svg = d3.select("svg")
-        .attr("width", width)
-        .attr("height", height);
+
+      const svg = d3.select(svgRef.current)
+        .append("g")
+        .attr("transform", `translate(${margin.left}, ${margin.top})`);
+
 
 
       // Convert the topojson map data to geojson format.
@@ -111,7 +122,7 @@ const MapChart = () => {
         .style("font-size", "10px")
         .style("text-anchor", "start");
     }
-  }, [eduData, mapData]);
+  }, [eduData, mapData, height, margin.left, margin.top, width]);
 
   return (
     <div className='chart-container'>
@@ -120,7 +131,7 @@ const MapChart = () => {
         Percentage of adults age 25 and older with a bachelor's degree or higher
         (2010-2014)
       </div>
-      <svg ></svg>
+      <svg ref={svgRef} width={w} height={h}></svg>
       <div className='tooltip' style={{
         position: "absolute",
         display: "none",

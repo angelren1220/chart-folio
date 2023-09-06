@@ -8,7 +8,7 @@ ChartFolio is an interactive visualization tool that allows users to explore dat
 
 Each chart type provides a unique representation of data and is enhanced with mouseover tooltips for a more detailed view.
 
-![ChartFolio Screenshot](path_to_screenshot.png) 
+![ChartFolio Screenshot](https://github.com/angelren1220/chart-folio/blob/main/docs/Screenshot%202023-09-06%20at%205.55.27%20PM.png?raw=true) 
 
 ## Built With
 
@@ -50,15 +50,3 @@ Upon starting the application, open [http://localhost:3000](http://localhost:300
 ## Usage
 
 Use the navigation tabs to switch between the different chart types. Hover over the elements in each chart for detailed tooltips and interactive data exploration.
-
-## Contributing
-
-Pull requests are welcome. For significant changes or enhancements, please open an issue first to discuss your ideas.
-
-## License
-
-This project is licensed under the MIT License (or your chosen license).
-
----
-
-Remember to replace placeholders like `[Your Repository Link]` and `[Your Repository Name]` with appropriate values. Adjust the license as per your preference. If you have more specific features or other considerations, you can easily expand this README structure!

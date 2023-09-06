@@ -1,70 +1,64 @@
-# Getting Started with Create React App
+# ChartFolio
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+ChartFolio is an interactive visualization tool that allows users to explore data through three distinct chart types:
 
-## Available Scripts
+1. **Bar Chart**
+2. **Choropleth Map Chart**
+3. **Heat Map Chart**
 
-In the project directory, you can run:
+Each chart type provides a unique representation of data and is enhanced with mouseover tooltips for a more detailed view.
 
-### `npm start`
+![ChartFolio Screenshot](path_to_screenshot.png) 
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## Built With
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+- [React.js](https://reactjs.org/) - A JavaScript library for building user interfaces.
+- [D3.js](https://d3js.org/) - A library for producing dynamic, interactive data visualizations in web browsers.
+- [Axios](https://github.com/axios/axios) - Promise based HTTP client for the browser and Node.js.
+- [SASS](https://sass-lang.com/) - A scripting language that is interpreted or compiled into Cascading Style Sheets (CSS).
+- [TopoJSON Client](https://github.com/topojson/topojson-client) - Provides tools for converting back and forth between TopoJSON and GeoJSON.
+- [Web Vitals](https://web.dev/vitals/) - Provides web performance metrics.
 
-### `npm test`
+## Getting Started
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### Prerequisites
 
-### `npm run build`
+- [Node.js](https://nodejs.org/)
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### Installation
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+1. Clone the repository:
+   ```
+   git clone git@github.com:angelren1220/chart-folio.git
+   ```
+2. Navigate to the project directory:
+   ```
+   cd chart-folio
+   ```
+3. Install the required packages:
+   ```
+   npm install
+   ```
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+### Running the application
 
-### `npm run eject`
+```bash
+npm start
+```
+Upon starting the application, open [http://localhost:3000](http://localhost:3000) in your browser to explore the charts in action.
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+## Usage
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+Use the navigation tabs to switch between the different chart types. Hover over the elements in each chart for detailed tooltips and interactive data exploration.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+## Contributing
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+Pull requests are welcome. For significant changes or enhancements, please open an issue first to discuss your ideas.
 
-## Learn More
+## License
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+This project is licensed under the MIT License (or your chosen license).
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+---
 
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+Remember to replace placeholders like `[Your Repository Link]` and `[Your Repository Name]` with appropriate values. Adjust the license as per your preference. If you have more specific features or other considerations, you can easily expand this README structure!

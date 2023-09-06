@@ -1,6 +1,5 @@
 import React, { useRef, useState, useEffect } from 'react';
 import * as d3 from 'd3';
-import * as topojson from 'topojson-client';
 import fetchData from '../hooks/fetchData';
 
 const HeatMapChart = () => {

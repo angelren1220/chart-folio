@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import * as d3 from 'd3';
 import * as topojson from 'topojson-client';
 import fetchData from '../hooks/fetchData';
+import '../styles/mapchart.scss';
 
 const MapChart = () => {
 
@@ -55,8 +56,33 @@ const MapChart = () => {
           // Find the matching county in the education data using the 'fips' identifier.
           const county = eduData.find(c => c.fips === d.id);
           return county ? colorScale(county.bachelorsOrHigher) : "#EEE";
+        })
+        // add tooltip event
+        .on("mouseover", (event, d) => {
+          // show tooltip
+          const county = eduData.find(c => c.fips === d.id);
+
+          if (county) {
+
+            d3.select(event.currentTarget)
+              .classed("map-highlighted", true);
+
+            d3.select(".tooltip")
+              .style("left", (event.pageX + 5) + "px")
+              .style("top", (event.pageY - 28) + "px")
+              .style("display", "inline-block")
+              .html(`${county.area_name}, ${county.state}, ${county.bachelorsOrHigher}%`);
+          }
+        })
+        .on("mouseout", (event) => {
+          // hide tooltip on mouseout
+          d3.select(event.currentTarget)
+            .classed("map-highlighted", false);
+          d3.select(".tooltip")
+            .style("display", "none");
         });
-      
+
+
       // create the legend
       const legendWidth = 300;
       const legendHeight = 10;
@@ -78,7 +104,7 @@ const MapChart = () => {
         .data(colorScale.domain())
         .enter()
         .append("text")
-        .attr("x", (d, i) => 
+        .attr("x", (d, i) =>
           i * (legendWidth / colorScale.range().length))
         .attr("y", legendHeight + 10)
         .text(d => `${Math.round(d)}%`)
@@ -95,6 +121,13 @@ const MapChart = () => {
         (2010-2014)
       </div>
       <svg ></svg>
+      <div className='tooltip' style={{
+        position: "absolute",
+        display: "none",
+        background: "#f9f9f9",
+        padding: "5px",
+        border: "1px solid #ccc"
+      }}></div>
     </div>
   );
 };

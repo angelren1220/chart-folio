@@ -1,6 +1,7 @@
 import React, { useRef, useState, useEffect } from 'react';
 import * as d3 from 'd3';
 import fetchData from '../hooks/fetchData';
+import '../styles/barchart.scss';
 
 const BarChart = () => {
 
@@ -91,7 +92,7 @@ const BarChart = () => {
           const [year, value] = d;
           // highlight the bar
           d3.select(event.currentTarget)
-            .attr("fill", "lightblue");
+            .classed("bar-highlighted", true);
 
           // display the tooltip
           d3.select(".tooltip")
@@ -109,7 +110,7 @@ const BarChart = () => {
 
           // revert bar's color
           d3.select(event.currentTarget)
-            .attr("fill", "navy");
+            .classed("bar-highlighted", false);
         })
 
 

@@ -34,9 +34,14 @@ const MapChart = () => {
         .attr("width", width)
         .attr("height", height);
 
+
+      // Convert the topojson map data to geojson format.
+      // geometric features of the counties to plot on the map.
       const counties = topojson.feature(mapData, mapData.objects.counties).features;
       const path = d3.geoPath();
 
+      // Create a color scale to visualize the education data.
+      // This determines the color of each county based on the percentage of residents with a bachelor's degree or higher.
       const colorScale = d3.scaleThreshold()
         .domain([10, 20, 30, 40, 50, 60, 70, 80, 90])
         .range(d3.schemeBlues[9]);
@@ -48,15 +53,36 @@ const MapChart = () => {
         .attr("class", "county")
         .attr("d", path)
         .attr("fill", d => {
+          // Find the matching county in the education data using the 'fips' identifier.
           const county = eduData.find(c => c.fips === d.id);
           return county ? colorScale(county.bachelorsOrHigher) : "#EEE";
         });
+      
+      // create the legend
+      const legendWidth = 300;
+      const legendHeight = 10;
+      const legend = svg.append("g")
+        .attr("id", "legend")
+        .attr("transform", `translate(${(width - legendWidth) / 2}, 20)`);
+      // create the legend's colored rectangles
+      legend.selectAll("rect")
+        .data(colorScale.range())
+        .enter()
+        .append("rect")
+        .attr("width", legendWidth / colorScale.range().length)
+        .attr("height", legendHeight)
+        .attr("x", (d, i) => i * (legendWidth / colorScale.range().length))
+        .attr("fill", d => d);
     }
   }, [eduData, mapData]);
 
   return (
     <div className='chart-container'>
-      <h2 className='chart-title'>Map Chart</h2>
+      <h2 className='chart-title'>United States Educational Attainment</h2>
+      <div id="description">
+        Percentage of adults age 25 and older with a bachelor's degree or higher
+        (2010-2014)
+      </div>
       <svg ></svg>
     </div>
   );

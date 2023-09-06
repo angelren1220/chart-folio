@@ -1,7 +1,8 @@
 import './App.css';
 import { useState  } from 'react';
 import BarChart from './components/BarChart';
-import MapChart from './components/MapChart';
+import ChoroplethMapChart from './components/ChoroplethMapChart';
+import HeatMapChart from './components/HeatMapChart';
 
 function App() {
 
@@ -11,10 +12,12 @@ function App() {
     <div className="App">
       <div className='tabs'>
         <button onClick={() => setActiveTab('bar')}>Bar Chart</button>
-        <button onClick={() => setActiveTab('map')}>Map Chart</button>
+        <button onClick={() => setActiveTab('choropleth')}>Choropleth Map Chart</button>
+        <button onClick={() => setActiveTab('heat')}>Heat Map Chart</button>
       </div>
       {activeTab === 'bar' && <BarChart />}
-      {activeTab === 'map' && <MapChart />}
+      {activeTab === 'choropleth' && <ChoroplethMapChart />}
+      {activeTab === 'heat' && <HeatMapChart />}
     </div>
   );
 }

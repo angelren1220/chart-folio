@@ -4,7 +4,7 @@ import * as topojson from 'topojson-client';
 import fetchData from '../hooks/fetchData';
 import '../styles/mapchart.scss';
 
-const MapChart = () => {
+const ChoroplethMapChart = () => {
 
   const [eduData, setEduData] = useState([]);
   const [mapData, setMapData] = useState(null);
@@ -143,4 +143,4 @@ const MapChart = () => {
   );
 };
 
-export default MapChart;
+export default ChoroplethMapChart;

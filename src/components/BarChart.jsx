@@ -23,7 +23,7 @@ const BarChart = () => {
     fetchData(dataLink)
       .then(data => {
 
-        const parsedData = []
+        const parsedData = [];
         const parseDate = d3.timeParse("%Y-%m-%d");
 
         data.data.forEach(item => {
@@ -43,7 +43,7 @@ const BarChart = () => {
   useEffect(() => {
     if (data.length > 0) {
 
-      const barWidth = width / data.length - 2;
+      const barWidth = width / data.length;
 
       const svg = d3.select(svgRef.current)
         .append("g")
@@ -91,28 +91,37 @@ const BarChart = () => {
           const [date, value] = d;
           const formatTime = d3.timeFormat("%Y Q%q");
           const formattedDate = formatTime(date);
+          const barTop = yScale(d[1]);
+          const tooltipX = xScale(d[0]);
+          const tooltipY = barTop - 5;
           // highlight the bar
           d3.select(event.currentTarget)
             .classed("bar-highlighted", true);
 
           // display the tooltip
           d3.select(".tooltip")
-            .style("left", (event.pageX + 5) + "px")
-            .style("top", (event.pageY - 28) + "px")
+            .html(`Year: ${formattedDate} <br>  $${value.toFixed(1)} Billion`)
+            .transition()
+            .duration(200)
+            .style("opacity", 1)
+            .style("left", tooltipX + "px")
+            .style("top", tooltipY + "px")
             .style("display", "inline-block")
-            .html(`Year: ${formattedDate} <br>  $${value.toFixed(1)} Billion`);
 
 
         })
         .on("mouseout", (event) => {
           // hide the tooltip
           d3.select(".tooltip")
+            .transition()
+            .duration(200)
+            .style("opacity", 0)
             .style("display", "none");
 
           // revert bar's color
           d3.select(event.currentTarget)
             .classed("bar-highlighted", false);
-        })
+        });
 
 
       // add x-axis
@@ -128,7 +137,7 @@ const BarChart = () => {
       // add y-axis
       svg.append("g")
         .call(yAxis);
-      
+
       // labels for axes
       svg.append("text")
         .attr("transform", `translate(${width / 2}, ${height + margin.bottom - 10})`)
@@ -150,7 +159,7 @@ const BarChart = () => {
 
   return (
     <div className='chart-container'>
-      <h2 className='chart-title'>United States GDP</h2>
+      <h2 className='chart-title'>United States Gross Domestic Product (GDP)</h2>
       <div className='tooltip' style={{
         position: "absolute",
         display: "none",
@@ -160,7 +169,7 @@ const BarChart = () => {
       }}></div>
       <svg ref={svgRef} width={w} height={h}></svg>
     </div>
-  )
-}
+  );
+};
 
 export default BarChart;

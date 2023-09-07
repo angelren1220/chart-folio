@@ -1,38 +1,53 @@
 .App {
-  text-align: center;
+  display: flex;
+  height: 100vh; /* Ensuring it takes the full viewport height */
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+.nav {
+  width: 15em;
+  background-color: #A2C579;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  justify-content: space-around;
+  padding: 1em; /* Added padding for better spacing */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Optional: Added shadow for a bit of depth */
 }
 
-.App-link {
-  color: #61dafb;
+.chart {
+  background-color: #FFFFDD
+}
+button {
+  border-radius: 8px;
+  border: 1px solid transparent;
+  padding: 1em 1.2em; 
+  margin-bottom: 0.5em; /* Added margin to give space between buttons */
+  font-size: 1em;
+  font-weight: 500;
+  font-family: inherit;
+  cursor: pointer;
+  background-color: #D2DE32;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+button:last-of-type {
+  margin-bottom: 0; /* Removing margin from the last button to avoid extra space at the bottom */
+}
+
+button:hover {
+  background-color: #f0f0f0; 
+}
+
+.sideview {
+  display: flex;
+  flex-direction: column;
+  height: 85vh; /* Changed to vh to maintain a proportionate height relative to the viewport */
+  width: 100%;
+  align-items: center;
+  justify-content: space-evenly;
+}
+
+.logo {
+  font-size: 3em;
+  color: #016A70;
+  margin-bottom: 1em; /* Added some margin for better spacing */
 }

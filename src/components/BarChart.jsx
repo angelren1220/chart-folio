@@ -85,7 +85,7 @@ const BarChart = () => {
         .attr("y", d => yScale(d[1]))
         .attr("width", barWidth)
         .attr("height", d => height - yScale(d[1]))
-        .attr("fill", "#2ca25f")
+        .attr("fill", "#FFBB5C")
         .attr("class", "bar")
         .on("mouseover", (event, d) => {
           const [date, value] = d;

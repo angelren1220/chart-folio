@@ -44,6 +44,8 @@ const HeatMapChart = () => {
   // create heatmap
   useEffect(() => {
     if (data.length > 0) {
+      
+      const monthNames = ["", "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
       const svg = d3.select(svgRef.current);
 
       // scales
@@ -73,10 +75,27 @@ const HeatMapChart = () => {
         .attr("y", d => yScale(d.month))
         .attr("width", xScale.bandwidth())
         .attr("height", yScale.bandwidth())
-        .attr("fill", d => colorScale(d.variance));
+        .attr("fill", d => colorScale(d.variance))
+        // add mouse event for tooltip
+        .on("mouseover", (event, d) => {
+          d3.select(".tooltip")
+            .style("left", (event.pageX + 5) + "px")
+            .style("top", (event.pageY - 28) + "px")
+            .style("opacity", 1)
+            .style("display", "block")
+            .html(`
+              ${monthNames[d.month]}, ${d.year}<br/>
+              <strong>Temperature: </strong>${d.temp.toFixed(2)}℃<br/>
+              <strong>Variance: </strong>${d.variance.toFixed(2)}℃
+            `);
+        })
+        .on("mouseout", () => {
+          d3.select(".tooltip")
+            .style("opacity", 0)
+            .style("display", "none");
+        });
 
       // draw axes
-      const monthNames = ["", "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
       const xAxis = d3.axisBottom(xScale).tickValues(xScale.domain().filter(year => year % 10 === 0));
       const yAxis = d3.axisLeft(yScale)

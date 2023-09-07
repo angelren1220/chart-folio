@@ -1,6 +1,7 @@
 import React, { useRef, useState, useEffect } from 'react';
 import * as d3 from 'd3';
 import fetchData from '../hooks/fetchData';
+import gradientColors from '../hooks/gradientColors';
 
 const HeatMapChart = () => {
   const [baseTemperature, setBaseTemperature] = useState();
@@ -14,7 +15,7 @@ const HeatMapChart = () => {
 
   useEffect(() => {
     const dataLink = "https://raw.githubusercontent.com/freeCodeCamp/ProjectReferenceData/master/global-temperature.json";
-    
+
     fetchData(dataLink)
       .then(data => {
 
@@ -37,7 +38,7 @@ const HeatMapChart = () => {
 
   // create heatmap
   useEffect(() => {
-    if(data.length > 0) {
+    if (data.length > 0) {
       const svg = d3.select(svgRef.current);
 
       // scales
@@ -49,10 +50,13 @@ const HeatMapChart = () => {
         .domain(d3.range(1, 13))
         .range([margin.top, height - margin.bottom]);
 
+      // set color scale
+      const colors = gradientColors();
+      
       const variance = data.map(d => d.variance);
-      // generate continuous, smooth color scales
-      const colorScale = d3.scaleSequential(d3.interpolatePlasma)
-        .domain([d3.min(variance), d3.max(variance)]);
+      const colorScale = d3.scaleQuantize()
+        .domain([d3.min(variance), d3.max(variance)])
+        .range(colors);
 
       // draw rectangles for heatmap
       svg.selectAll("rect")
@@ -65,8 +69,24 @@ const HeatMapChart = () => {
         .attr("height", yScale.bandwidth())
         .attr("fill", d => colorScale(d.variance));
 
+      // draw axes
+      const monthNames = ["", "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+      const xAxis = d3.axisBottom(xScale).tickValues(xScale.domain().filter(year => year % 10 === 0));
+      const yAxis = d3.axisLeft(yScale)
+        .tickFormat(d => monthNames[d]);
+
+
+      svg.append("g")
+        .attr("transform", `translate(0, ${height - margin.bottom})`)
+        .call(xAxis);
+
+      svg.append("g")
+        .attr("transform", `translate(${margin.left}, 0)`)
+        .call(yAxis);
+
     }
-  })
+  }, [data]);
 
 
   return (

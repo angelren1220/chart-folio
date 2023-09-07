@@ -19,7 +19,7 @@ const BarChart = () => {
   // fetch and parse data
   useEffect(() => {
     const dataLink = "https://raw.githubusercontent.com/freeCodeCamp/ProjectReferenceData/master/GDP-data.json";
-    
+
     fetchData(dataLink)
       .then(data => {
 
@@ -85,7 +85,7 @@ const BarChart = () => {
         .attr("y", d => yScale(d[1]))
         .attr("width", barWidth)
         .attr("height", d => height - yScale(d[1]))
-        .attr("fill", "navy")
+        .attr("fill", "#2ca25f")
         .attr("class", "bar")
         .on("mouseover", (event, d) => {
           const [date, value] = d;

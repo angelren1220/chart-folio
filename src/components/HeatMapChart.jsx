@@ -3,6 +3,7 @@ import * as d3 from 'd3';
 import fetchData from '../hooks/fetchData';
 
 const HeatMapChart = () => {
+  const [baseTemperature, setBaseTemperature] = useState();
   const [data, setData] = useState([]);
 
   const w = 1200;
@@ -17,6 +18,7 @@ const HeatMapChart = () => {
     fetchData(dataLink)
       .then(data => {
 
+        const baseTemperature = data.baseTemperature;
         const parsedData = [];
 
         data.monthlyVariance.forEach(item => {
@@ -25,6 +27,7 @@ const HeatMapChart = () => {
 
         console.log(parsedData);
         setData(parsedData);
+        setBaseTemperature(baseTemperature);
       })
       .catch(error => console.error("Error fetching data:", error));
 
@@ -43,13 +46,25 @@ const HeatMapChart = () => {
         .range([margin.left, width - margin.right]);
 
       const yScale = d3.scaleBand()
-        .domain(d3.range(data.map(d => d.month)))
+        .domain(d3.range(1, 13))
         .range([margin.top, height - margin.bottom]);
 
       const variance = data.map(d => d.variance);
       // generate continuous, smooth color scales
       const colorScale = d3.scaleSequential(d3.interpolatePlasma)
         .domain([d3.min(variance), d3.max(variance)]);
+
+      // draw rectangles for heatmap
+      svg.selectAll("rect")
+        .data(data)
+        .enter()
+        .append("rect")
+        .attr("x", d => xScale(d.year))
+        .attr("y", d => yScale(d.month))
+        .attr("width", xScale.bandwidth())
+        .attr("height", yScale.bandwidth())
+        .attr("fill", d => colorScale(d.variance));
+
     }
   })
 
@@ -58,7 +73,7 @@ const HeatMapChart = () => {
     <div className='chart-container'>
       <h2 className='chart-title'>Monthly Global Land-Surface Temperature</h2>
       <div id="description">
-        1753 - 2015: base temperature 8.66℃
+        1753 - 2015: base temperature {baseTemperature}℃
       </div>
       <svg ref={svgRef} width={w} height={h}></svg>
       <div className='tooltip' style={{

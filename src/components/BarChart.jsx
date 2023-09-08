@@ -95,7 +95,6 @@ const BarChart = () => {
           const formatTime = d3.timeFormat("%Y Q%q");
           const formattedDate = formatTime(date);
           const barTop = yScale(d[1]);
-          const tooltipX = xScale(d[0]);
           const tooltipY = barTop - 5;
           // highlight the bar
           d3.select(event.currentTarget)
@@ -107,7 +106,7 @@ const BarChart = () => {
             .transition()
             .duration(200)
             .style("opacity", 1)
-            .style("left", tooltipX + "px")
+            .style('left', event.pageX - barWidth + 'px')
             .style("top", tooltipY + "px")
             .style("display", "inline-block");
 

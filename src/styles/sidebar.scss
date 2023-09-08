@@ -1,0 +1,12 @@
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  height: 85%;
+  width: 100%;
+  align-items: center;
+  justify-content: space-around;
+  
+  a:hover{
+    font-weight: 900;
+  }  
+}

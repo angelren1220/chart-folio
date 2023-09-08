@@ -3,12 +3,14 @@
 ChartFolio is an interactive visualization tool that allows users to explore data through three distinct chart types:
 
 1. **Bar Chart**
+![barchart]() 
 2. **Choropleth Map Chart**
+![barchart]() 
 3. **Heat Map Chart**
+![barchart]() 
 
 Each chart type provides a unique representation of data and is enhanced with mouseover tooltips for a more detailed view.
 
-![ChartFolio Screenshot](https://github.com/angelren1220/chart-folio/blob/main/docs/Screenshot%202023-09-06%20at%205.55.27%20PM.png?raw=true) 
 
 ## Built With
 

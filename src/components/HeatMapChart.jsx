@@ -155,7 +155,7 @@ const HeatMapChart = () => {
   return (
     <div className='chart-container'>
       <h2 className='chart-title'>Monthly Global Land-Surface Temperature</h2>
-      <div id="description">
+      <div className="chart-description">
         1753 - 2015: base temperature {baseTemperature}℃
       </div>
       <svg ref={svgRef} width={w} height={h}></svg>

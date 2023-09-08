@@ -127,7 +127,7 @@ const ChoroplethMapChart = () => {
   return (
     <div className='chart-container'>
       <h2 className='chart-title'>United States Educational Attainment</h2>
-      <div id="description">
+      <div className="chart-description">
         Percentage of adults age 25 and older with a bachelor's degree or higher
         (2010-2014)
       </div>

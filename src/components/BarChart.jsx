@@ -5,6 +5,7 @@ import '../styles/barchart.scss';
 
 const BarChart = () => {
 
+  const [description, setDescription] = useState("");
   const [data, setData] = useState([]);
 
   const w = 1200;
@@ -23,6 +24,7 @@ const BarChart = () => {
     fetchData(dataLink)
       .then(data => {
 
+        const description = data.description;
         const parsedData = [];
         const parseDate = d3.timeParse("%Y-%m-%d");
 
@@ -33,6 +35,7 @@ const BarChart = () => {
         // sort data by date
         parsedData.sort((a, b) => a[0] - b[0]);
 
+        setDescription(description);
         setData(parsedData);
       })
       .catch(error => console.error("Error fetching data:", error));
@@ -106,7 +109,7 @@ const BarChart = () => {
             .style("opacity", 1)
             .style("left", tooltipX + "px")
             .style("top", tooltipY + "px")
-            .style("display", "inline-block")
+            .style("display", "inline-block");
 
 
         })
@@ -160,6 +163,9 @@ const BarChart = () => {
   return (
     <div className='chart-container'>
       <h2 className='chart-title'>United States Gross Domestic Product (GDP)</h2>
+      <div className="chart-description">
+        {description}
+      </div>
       <div className='tooltip' style={{
         position: "absolute",
         display: "none",
